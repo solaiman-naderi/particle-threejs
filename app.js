@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { TransformControls } from "three/addons/controls/TransformControls.js";
 let scene = "";
 let camera = "";
 let renderer = "";
@@ -38,6 +40,7 @@ const init = () => {
   });
   material.color.setHSL(1.0, 0.3, 0.7);
 
+  // Added light
   const light = new THREE.PointLight(0xffffff, 100, 50);
   light.position.set(0, 10, 4);
   light.castShadow = true;
@@ -50,11 +53,22 @@ const init = () => {
   const particle = new THREE.Points(geometry, material);
   scene.add(particle);
   camera.position.z = 200;
-  console.log(100);
+
+  //controls
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.update();
+
+  //transform controll
+  const transformControll = new TransformControls(camera, renderer.domElement);
+
+  transformControll.addEventListener("dragging-changed", (e) => {
+    controls.enabled = !e.value;
+  });
+
+  // transformControll.attach(particle);
+  scene.add(transformControll);
 };
 init();
-
-
 
 function animate() {
   requestAnimationFrame(animate);
